@@ -12,16 +12,24 @@ export default function QRScanner({ onScan, isPaused }: QRScannerProps) {
   const [error, setError] = useState<string>("");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  
+  // Use refs for callbacks to avoid re-running the camera setup effect
+  const onScanRef = useRef(onScan);
+  const isPausedRef = useRef(isPaused);
 
   useEffect(() => {
+    onScanRef.current = onScan;
+    isPausedRef.current = isPaused;
+  }, [onScan, isPaused]);
+
+  useEffect(() => {
+    let isMounted = true;
+
     if (!isCameraActive) {
-      if (scannerRef.current && scannerRef.current.isScanning) {
-        scannerRef.current.stop().catch(console.error);
-        scannerRef.current.clear();
-      }
-      return;
+      return; // Do nothing if camera shouldn't be active
     }
 
+    // We only create the scanner if we are active
     const scanner = new Html5Qrcode("reader");
     scannerRef.current = scanner;
 
@@ -34,30 +42,42 @@ export default function QRScanner({ onScan, isPaused }: QRScannerProps) {
             qrbox: { width: 250, height: 250 },
           },
           (decodedText) => {
-            if (isPaused) return;
+            if (isPausedRef.current) return;
             // Apagar la cámara inmediatamente tras leer un QR válido
             setIsCameraActive(false);
-            onScan(decodedText);
+            onScanRef.current(decodedText);
           },
           (errorMessage) => {
             // Ignorar errores normales de escaneo continuo
           }
         );
       } catch (err: any) {
-        setError("Error al acceder a la cámara. Verifique permisos.");
-        setIsCameraActive(false);
+        if (isMounted) {
+          setError("Error al acceder a la cámara. Verifique permisos.");
+          setIsCameraActive(false);
+        }
       }
     };
 
     startScanning();
 
     return () => {
-      if (scannerRef.current?.isScanning) {
-        scannerRef.current.stop().catch(console.error);
-        scannerRef.current.clear();
+      isMounted = false;
+      if (scannerRef.current) {
+        try {
+          if (scannerRef.current.isScanning) {
+            scannerRef.current.stop().then(() => {
+              scannerRef.current?.clear();
+            }).catch(console.error);
+          } else {
+            scannerRef.current.clear();
+          }
+        } catch (err) {
+          console.error("Error al detener el escáner", err);
+        }
       }
     };
-  }, [isCameraActive, onScan, isPaused]);
+  }, [isCameraActive]);
 
   return (
     <div className="w-full max-w-md mx-auto relative vintage-box p-4 bg-[#2a2622] flex flex-col items-center justify-center min-h-[300px]">
