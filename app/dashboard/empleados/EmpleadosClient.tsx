@@ -19,7 +19,7 @@ export default function EmpleadosClient({ initialEmpleados }: { initialEmpleados
       ID_EMP: "",
       NOMBRE: "",
       APELLIDO: "",
-      RUBRO: "",
+      RUBRO: "Spa",
       HORA_EN_LUN_SAB: "09:00",
       HORA_SA_LUN_SAB: "18:00",
       HORA_EN_DOM: "10:00",
@@ -121,7 +121,11 @@ export default function EmpleadosClient({ initialEmpleados }: { initialEmpleados
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Rubro</label>
-                  <input required type="text" value={editing.RUBRO} onChange={e => setEditing({...editing, RUBRO: e.target.value})} className="vintage-input w-full" placeholder="Ej. Barbero, Masajista..." />
+                  <select required value={editing.RUBRO} onChange={e => setEditing({...editing, RUBRO: e.target.value})} className="vintage-input w-full">
+                    <option value="Spa">Spa</option>
+                    <option value="Barberia">Barbería</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Entrada (Lun-Sab)</label>
