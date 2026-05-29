@@ -127,22 +127,6 @@ export default function EmpleadosClient({ initialEmpleados }: { initialEmpleados
                     <option value="Recepcionista">Recepcionista</option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Entrada (Lun-Sab)</label>
-                  <input required type="time" value={editing.HORA_EN_LUN_SAB} onChange={e => setEditing({...editing, HORA_EN_LUN_SAB: e.target.value})} className="vintage-input w-full" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Salida (Lun-Sab)</label>
-                  <input required type="time" value={editing.HORA_SA_LUN_SAB} onChange={e => setEditing({...editing, HORA_SA_LUN_SAB: e.target.value})} className="vintage-input w-full" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Entrada (Dom)</label>
-                  <input type="time" value={editing.HORA_EN_DOM} onChange={e => setEditing({...editing, HORA_EN_DOM: e.target.value})} className="vintage-input w-full" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Salida (Dom)</label>
-                  <input type="time" value={editing.HORA_SA_DOM} onChange={e => setEditing({...editing, HORA_SA_DOM: e.target.value})} className="vintage-input w-full" />
-                </div>
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <button type="button" onClick={() => setEditing(null)} className="vintage-button text-sm">Cancelar</button>

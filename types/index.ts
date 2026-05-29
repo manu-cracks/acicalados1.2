@@ -41,4 +41,8 @@ export interface SystemConfig {
   UMBRAL_FALTA_MIN: number;
   ZONA_HORARIA: string;
   MODO_MANTENIMIENTO: string;
+  HORA_EN_LUN_SAB: string;
+  HORA_SA_LUN_SAB: string;
+  HORA_EN_DOM: string;
+  HORA_SA_DOM: string;
 }

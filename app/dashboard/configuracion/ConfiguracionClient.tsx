@@ -76,6 +76,64 @@ export default function ConfiguracionClient({ initialConfig }: { initialConfig: 
             </div>
           </div>
 
+          <div className="space-y-4 border-b border-vintage-border pb-6">
+            <h3 className="font-bold text-vintage-dark uppercase tracking-widest border-b border-vintage-border pb-2">Horarios Globales</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="vintage-box p-4 bg-[#f8f5f0]">
+                <h4 className="font-bold text-vintage-teal uppercase mb-3 border-b border-vintage-border/50 pb-1">Lunes a Sábado</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Hora de Entrada</label>
+                    <input 
+                      required 
+                      type="time" 
+                      value={config.HORA_EN_LUN_SAB || "09:00"} 
+                      onChange={e => setConfig({...config, HORA_EN_LUN_SAB: e.target.value})} 
+                      className="vintage-input w-full" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Hora de Salida</label>
+                    <input 
+                      required 
+                      type="time" 
+                      value={config.HORA_SA_LUN_SAB || "18:00"} 
+                      onChange={e => setConfig({...config, HORA_SA_LUN_SAB: e.target.value})} 
+                      className="vintage-input w-full" 
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="vintage-box p-4 bg-[#f8f5f0]">
+                <h4 className="font-bold text-vintage-teal uppercase mb-3 border-b border-vintage-border/50 pb-1">Domingos</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Hora de Entrada</label>
+                    <input 
+                      required 
+                      type="time" 
+                      value={config.HORA_EN_DOM || "10:00"} 
+                      onChange={e => setConfig({...config, HORA_EN_DOM: e.target.value})} 
+                      className="vintage-input w-full" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-vintage-dark uppercase mb-1">Hora de Salida</label>
+                    <input 
+                      required 
+                      type="time" 
+                      value={config.HORA_SA_DOM || "16:00"} 
+                      onChange={e => setConfig({...config, HORA_SA_DOM: e.target.value})} 
+                      className="vintage-input w-full" 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-4">
             <h3 className="font-bold text-vintage-dark uppercase tracking-widest border-b border-vintage-border pb-2">Sistema</h3>
             

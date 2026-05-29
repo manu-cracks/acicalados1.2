@@ -169,7 +169,7 @@ export async function getConfig(): Promise<SystemConfig> {
   const sheets = await getGoogleSheets();
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Config!A2:E2',
+    range: 'Config!A2:I2',
   });
   
   const row = response.data.values?.[0] || [];
@@ -179,6 +179,10 @@ export async function getConfig(): Promise<SystemConfig> {
     UMBRAL_FALTA_MIN: parseInt(row[2] || '60', 10),
     ZONA_HORARIA: row[3] || 'America/Lima',
     MODO_MANTENIMIENTO: row[4] || 'false',
+    HORA_EN_LUN_SAB: row[5] || '09:00',
+    HORA_SA_LUN_SAB: row[6] || '18:00',
+    HORA_EN_DOM: row[7] || '10:00',
+    HORA_SA_DOM: row[8] || '16:00',
   };
 }
 
@@ -252,7 +256,7 @@ export async function updateConfig(config: Partial<SystemConfig>): Promise<void>
   const sheets = await getGoogleSheets();
   await sheets.spreadsheets.values.update({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Config!A2:E2',
+    range: 'Config!A2:I2',
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: [[
@@ -260,7 +264,11 @@ export async function updateConfig(config: Partial<SystemConfig>): Promise<void>
         newConfig.TOLERANCIA_SALIDA_MIN.toString(),
         newConfig.UMBRAL_FALTA_MIN.toString(),
         newConfig.ZONA_HORARIA,
-        newConfig.MODO_MANTENIMIENTO
+        newConfig.MODO_MANTENIMIENTO,
+        newConfig.HORA_EN_LUN_SAB,
+        newConfig.HORA_SA_LUN_SAB,
+        newConfig.HORA_EN_DOM,
+        newConfig.HORA_SA_DOM
       ]]
     }
   });

@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Ausencia planificada: ' + ausencia.MOTIVO }, { status: 400 });
       }
 
-      const horaEsperada = getExpectedTime(empleado, diaSemana, true);
+      const horaEsperada = getExpectedTime(config, diaSemana, true);
       const diff = differenceInMinutes(horaEsperada, horaReal);
       
       let estadoEn = 'A_tiempo';
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Salida ya registrada hoy' }, { status: 400 });
       }
 
-      const horaEsperada = getExpectedTime(empleado, diaSemana, false);
+      const horaEsperada = getExpectedTime(config, diaSemana, false);
       const diff = differenceInMinutes(horaEsperada, horaReal);
 
       let estadoSa = 'A_tiempo';

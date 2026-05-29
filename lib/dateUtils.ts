@@ -23,11 +23,11 @@ export function parseMinutesToTime(totalMinutes: number): string {
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
 
-export function getExpectedTime(empleado: any, diaSemana: number, isEntrada: boolean): string {
+export function getExpectedTime(config: any, diaSemana: number, isEntrada: boolean): string {
   // Lunes a Sabado = 1 to 6
   if (diaSemana >= 1 && diaSemana <= 6) {
-    return isEntrada ? empleado.HORA_EN_LUN_SAB : empleado.HORA_SA_LUN_SAB;
+    return isEntrada ? config.HORA_EN_LUN_SAB : config.HORA_SA_LUN_SAB;
   }
   // Domingo = 0
-  return isEntrada ? empleado.HORA_EN_DOM : empleado.HORA_SA_DOM;
+  return isEntrada ? config.HORA_EN_DOM : config.HORA_SA_DOM;
 }
