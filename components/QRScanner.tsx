@@ -12,6 +12,12 @@ export default function QRScanner({ onScan, isPaused }: QRScannerProps) {
   const [error, setError] = useState<string>("");
   const scannerRef = useRef<Html5Qrcode | null>(null);
 
+  const isPausedRef = useRef(isPaused);
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
+
   useEffect(() => {
     const scanner = new Html5Qrcode("reader");
     scannerRef.current = scanner;
@@ -25,12 +31,12 @@ export default function QRScanner({ onScan, isPaused }: QRScannerProps) {
             qrbox: { width: 250, height: 250 },
           },
           (decodedText) => {
-            if (!isPaused) {
+            if (!isPausedRef.current) {
               onScan(decodedText);
             }
           },
           (errorMessage) => {
-            // Ignore normal scan errors (no qr found)
+            // Ignore normal scan errors
           }
         );
       } catch (err: any) {
@@ -45,7 +51,7 @@ export default function QRScanner({ onScan, isPaused }: QRScannerProps) {
         scannerRef.current.stop().catch(console.error);
       }
     };
-  }, [isPaused, onScan]);
+  }, [onScan]);
 
   return (
     <div className="w-full max-w-md mx-auto relative vintage-box p-4 bg-[#2a2622]">

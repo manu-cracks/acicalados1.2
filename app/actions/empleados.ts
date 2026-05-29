@@ -12,3 +12,8 @@ export async function saveEmpleado(empleado: Empleado, isNew: boolean) {
   }
   revalidatePath('/dashboard/empleados');
 }
+
+export async function fetchEmpleadosAction() {
+  const { getEmpleados } = await import("@/lib/googleSheetsService");
+  return await getEmpleados();
+}

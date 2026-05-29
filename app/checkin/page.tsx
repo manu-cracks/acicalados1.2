@@ -4,11 +4,15 @@ import { useState, useEffect } from "react";
 import QRScanner from "@/components/QRScanner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { fetchEmpleadosAction } from "@/app/actions/empleados";
+import { Empleado } from "@/types";
 
 export default function CheckinPage() {
   const [mode, setMode] = useState<"entrada" | "salida">("entrada");
   const [role, setRole] = useState<string | null>(null);
+  const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [manualId, setManualId] = useState("");
+  const [pendingScan, setPendingScan] = useState<Empleado | null>(null);
   const [scanResult, setScanResult] = useState<any>(null);
   const [isPaused, setIsPaused] = useState(false);
   const router = useRouter();
@@ -18,10 +22,34 @@ export default function CheckinPage() {
       .then((res) => res.json())
       .then((data) => setRole(data.role))
       .catch(console.error);
+      
+    fetchEmpleadosAction()
+      .then(data => setEmpleados(data))
+      .catch(console.error);
   }, []);
 
-  const handleScan = async (idEmp: string) => {
+  const handleScan = (idEmp: string) => {
     setIsPaused(true);
+    
+    // Buscar empleado
+    const emp = empleados.find(e => e.ID_EMP === idEmp);
+    if (!emp) {
+      setScanResult({
+        success: false,
+        message: `Empleado con ID "${idEmp}" no encontrado.`
+      });
+      return;
+    }
+    
+    setPendingScan(emp);
+  };
+
+  const confirmAttendance = async () => {
+    if (!pendingScan) return;
+    
+    const idEmp = pendingScan.ID_EMP;
+    setPendingScan(null);
+    
     try {
       const res = await fetch("/api/attendance", {
         method: "POST",
@@ -43,6 +71,11 @@ export default function CheckinPage() {
     }
   };
 
+  const cancelAttendance = () => {
+    setPendingScan(null);
+    setTimeout(() => setIsPaused(false), 500);
+  };
+
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (manualId.trim()) {
@@ -53,7 +86,7 @@ export default function CheckinPage() {
 
   const closePopup = () => {
     setScanResult(null);
-    setTimeout(() => setIsPaused(false), 2000); // Resume scanning after 2s pause
+    setTimeout(() => setIsPaused(false), 1500); // Resume scanning after 1.5s pause
   };
 
   const handleLogout = async () => {
@@ -102,7 +135,7 @@ export default function CheckinPage() {
               )}
             </div>
             
-            <QRScanner onScan={handleScan} isPaused={isPaused || !!scanResult} />
+            <QRScanner onScan={handleScan} isPaused={isPaused || !!scanResult || !!pendingScan} />
             
             {role === "OWNER" && (
               <form onSubmit={handleManualSubmit} className="mt-6 border-t border-vintage-dark/20 pt-4">
@@ -136,6 +169,29 @@ export default function CheckinPage() {
       </main>
 
       {/* Popups de Confirmación */}
+      {pendingScan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-vintage-dark/80 p-4">
+          <div className="vintage-box p-8 max-w-md w-full bg-[#eaddc5]">
+            <h3 className="font-display text-2xl mb-4 uppercase text-center border-b border-vintage-border pb-2">
+              Confirmar {mode === "entrada" ? "Entrada" : "Salida"}
+            </h3>
+            <div className="text-center mb-8">
+              <p className="text-sm uppercase font-bold text-vintage-teal">Empleado Identificado:</p>
+              <p className="text-2xl font-bold text-vintage-dark mt-2">{pendingScan.NOMBRE} {pendingScan.APELLIDO}</p>
+              <p className="text-sm text-vintage-dark/70 mt-1">{pendingScan.RUBRO} - {pendingScan.ID_EMP}</p>
+            </div>
+            <div className="flex gap-4">
+              <button onClick={cancelAttendance} className="w-full vintage-button bg-white text-vintage-dark hover:bg-gray-100 py-3">
+                CANCELAR
+              </button>
+              <button onClick={confirmAttendance} className="w-full vintage-button bg-vintage-dark text-vintage-paper hover:bg-black py-3">
+                CONFIRMAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {scanResult && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-vintage-dark/80 p-4">
           <div className={`vintage-box p-8 max-w-md w-full border-4 ${getResultColor()}`}>
