@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vintage-paper: #f4ecd8;
+  --color-vintage-dark: #2a2622;
+  --color-vintage-red: #8b3a3a;
+  --color-vintage-teal: #3a7a7a;
+  --color-vintage-accent: #c29b62;
+  --color-vintage-border: #8c7b64;
+}
+
+@layer base {
+  :root {
+    --background: var(--color-vintage-paper);
+    --foreground: var(--color-vintage-dark);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    /* Subtle grunge texture using CSS radial gradient */
+    background-image: 
+      radial-gradient(circle at center, transparent 0%, rgba(139, 122, 99, 0.05) 100%),
+      repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 122, 99, 0.02) 10px, rgba(139, 122, 99, 0.02) 20px);
+    font-family: var(--font-sans), sans-serif;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .vintage-box {
+    @apply bg-[#eaddc5] border-2 border-vintage-border shadow-[4px_4px_0_0_#8c7b64] relative;
+  }
+  
+  .vintage-box::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border: 1px solid rgba(140, 123, 100, 0.3);
+    pointer-events: none;
+  }
+
+  .vintage-button {
+    @apply bg-[#eaddc5] border-2 border-vintage-border shadow-[4px_4px_0_0_#8c7b64] relative px-4 py-2 text-lg uppercase tracking-wider text-vintage-dark transition-transform active:translate-y-1 active:translate-x-1 active:shadow-none hover:bg-[#dfcdb1];
+    font-family: var(--font-display), serif;
+  }
+
+  .vintage-input {
+    @apply w-full bg-transparent border-b-2 border-vintage-dark/50 px-2 py-2 focus:outline-none focus:border-vintage-red font-sans placeholder-vintage-dark/40;
+  }
+  
+  .vintage-badge {
+    @apply px-3 py-1 text-xs uppercase font-bold border border-vintage-dark bg-[#dfcdb1] transform -rotate-2 inline-block;
+  }
+}
