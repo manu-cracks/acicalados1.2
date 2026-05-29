@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
-export async function POST() {
-  const response = NextResponse.json({ success: true });
+export async function POST(request: Request) {
+  const url = new URL('/login', request.url);
+  const response = NextResponse.redirect(url);
   response.cookies.delete('session_token');
   return response;
 }
