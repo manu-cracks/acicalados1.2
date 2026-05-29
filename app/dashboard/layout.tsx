@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#eaddc5] flex flex-col md:flex-row">
