@@ -24,9 +24,23 @@ export async function getEmpleados(): Promise<Empleado[]> {
 
 export async function addEmpleado(empleado: Empleado): Promise<void> {
   const sheets = await getGoogleSheets();
-  await sheets.spreadsheets.values.append({
+  
+  const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Empleados!A:I',
+    range: 'Empleados!A:A',
+  });
+  const values = response.data.values || [];
+  let nextRow = values.length + 1;
+  for (let i = 0; i < values.length; i++) {
+    if (!values[i] || !values[i][0] || values[i][0].trim() === '') {
+      nextRow = i + 1;
+      break;
+    }
+  }
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `Empleados!A${nextRow}:I${nextRow}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: [[
@@ -34,11 +48,11 @@ export async function addEmpleado(empleado: Empleado): Promise<void> {
         empleado.NOMBRE,
         empleado.APELLIDO,
         empleado.RUBRO,
-        empleado.HORA_EN_LUN_SAB,
-        empleado.HORA_SA_LUN_SAB,
-        empleado.HORA_EN_DOM,
-        empleado.HORA_SA_DOM,
-        empleado.ESTADO
+        empleado.HORA_EN_LUN_SAB || "",
+        empleado.HORA_SA_LUN_SAB || "",
+        empleado.HORA_EN_DOM || "",
+        empleado.HORA_SA_DOM || "",
+        empleado.ESTADO || "Activo"
       ]]
     }
   });
@@ -149,9 +163,23 @@ export async function getAusenciasPlanificadas(fecha?: string): Promise<Ausencia
 export async function addAusenciaPlanificada(ausencia: Omit<AusenciaPlanificada, 'ID'>): Promise<void> {
   const sheets = await getGoogleSheets();
   const id = crypto.randomUUID();
-  await sheets.spreadsheets.values.append({
+  
+  const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Ausencias_Planificadas!A:E',
+    range: 'Ausencias_Planificadas!A:A',
+  });
+  const values = response.data.values || [];
+  let nextRow = values.length + 1;
+  for (let i = 0; i < values.length; i++) {
+    if (!values[i] || !values[i][0] || values[i][0].trim() === '') {
+      nextRow = i + 1;
+      break;
+    }
+  }
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `Ausencias_Planificadas!A${nextRow}:E${nextRow}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: [[
@@ -193,9 +221,23 @@ export async function registrarEntrada(
   estadoEn: string
 ): Promise<void> {
   const sheets = await getGoogleSheets();
-  await sheets.spreadsheets.values.append({
+  
+  const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Asistencia!A:G',
+    range: 'Asistencia!A:A',
+  });
+  const values = response.data.values || [];
+  let nextRow = values.length + 1;
+  for (let i = 0; i < values.length; i++) {
+    if (!values[i] || !values[i][0] || values[i][0].trim() === '') {
+      nextRow = i + 1;
+      break;
+    }
+  }
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `Asistencia!A${nextRow}:G${nextRow}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: [[
